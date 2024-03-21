@@ -1,7 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Toutes les recettes {% endblock %}
+{% block title "Recette :" ~ recipe.title %}
 
 {% block body %}
-    {{ slug | upper }}
+    <h1>{{ recipe.title }}</h1>
+
+    <p>
+        {{ recipe.content | nl2br }}
+    </p>
 {% endblock %}
