@@ -57,7 +57,7 @@ class RecipeController extends AbstractController
         if ($form->isSubmitted() && $form->isValid())
         {
             $em->flush();
-            $this->addFlash('sucess', 'La recette a bien été modifiée');
+            $this->addFlash('success', 'La recette a bien été modifiée');
             return $this->redirectToRoute('recipe.index');
         }
         return $this->render(
@@ -67,5 +67,35 @@ class RecipeController extends AbstractController
                 'form' => $form
             ]
         );
+    }
+
+    #[Route('/recettes/create', name: 'recipe.create', methods: ['GET', 'POST'])]
+    public function create(Request $request, EntityManagerInterface $em): Response
+    {
+        $recipe = new Recipe();
+        $form = $this->createForm(RecipeType::class, $recipe);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            $em->persist($recipe);
+            $em->flush();
+            $this->addFlash('success', 'La recette a bien été créee');
+            return $this->redirectToRoute('recipe.index');
+        }
+        return $this->render(
+            view: 'recipe/create.html.twig',
+            parameters: [
+                'form' => $form
+            ]
+        );
+    }
+
+    #[Route('/recettes/{id}/delete', name: 'recipe.delete', methods: ['DELETE'])]
+    public function remove(Recipe $recipe, EntityManagerInterface $em): Response
+    {
+        $em->remove($recipe);
+        $em->flush();
+        $this->addFlash('success', 'La recette a bien été supprimée');
+        return $this->redirectToRoute('recipe.index');
     }
 }
