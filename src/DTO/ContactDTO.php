@@ -17,14 +17,14 @@ class ContactDTO
     #[Assert\Length(min: 3, max: 200)]
     public string $name = '';
 
-    #[Assert\NotBlank()]
-    #[Assert\Email()]
+    #[Assert\NotBlank]
+    #[Assert\Email]
     public string $email = '';
 
-    #[Assert\NotBlank()]
+    #[Assert\NotBlank]
     #[Assert\Length(min: 3, max: 200)]
     public string $message = '';
 
-    #[Assert\NotBlank()]
+    #[Assert\NotBlank]
     public string $service = '';
 }

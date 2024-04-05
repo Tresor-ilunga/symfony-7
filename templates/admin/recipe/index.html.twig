@@ -1,15 +1,10 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/admin.html.twig' %}
 
 {% block title %}Toutes les recettes {% endblock %}
 
 {% block body %}
     <p>
-        Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-        when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-    </p>
-    <p>
-        <a class="btn btn-primary btn-sm" href="{{ path('recipe.create') }}">Créer une recette</a>
+        <a class="btn btn-primary btn-sm" href="{{ path('admin.recipe.create') }}">Créer une recette</a>
     </p>
     <table class="table">
         <thead>
@@ -22,12 +17,12 @@
             {% for recipe in recipes %}
             <tr>
                 <td>
-                    <a href="{{ path('recipe.show', {id: recipe.id, slug: recipe.slug}) }}">{{ recipe.getTitle() }}</a>
+                    <a href="{{ path('admin.recipe.edit', {id: recipe.id}) }}">{{ recipe.getTitle() }}</a>
                 </td>
                 <td>
                     <div class="d-flex gap-1">
-                        <a class="btn btn-primary btn-sm" href="{{ path('recipe.edit', {id: recipe.id}) }}">Editer</a>
-                        <form action="{{ path('recipe.delete', {id: recipe.id}) }}" method="post">
+                        <a class="btn btn-primary btn-sm" href="{{ path('admin.recipe.edit', {id: recipe.id}) }}">Editer</a>
+                        <form action="{{ path('admin.recipe.delete', {id: recipe.id}) }}" method="post">
                             <input type="hidden" name="_method" value="DELETE">
                             <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
                         </form>
