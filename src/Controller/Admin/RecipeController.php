@@ -6,7 +6,6 @@ namespace App\Controller\Admin;
 
 use App\Entity\Recipe;
 use App\Form\RecipeType;
-use App\Repository\CategoryRepository;
 use App\Repository\RecipeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,9 +25,10 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class RecipeController extends AbstractController
 {
     #[Route('/', name: 'index')]
-    public function index(RecipeRepository $repository, CategoryRepository $repositoryCategory, EntityManagerInterface $em): Response
+    public function index(RecipeRepository $repository, Request $request): Response
     {
-        $recipes = $repository->findWithDurationLowerThan(20);
+        $page = $request->query->getInt('page', 1);// 1er request
+        $recipes = $repository->paginateRecipes($page);
         return $this->render(
             view: 'admin/recipe/index.html.twig',
             parameters: [
