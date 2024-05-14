@@ -32,7 +32,7 @@ class RecipeController extends AbstractController
         $page = $request->query->getInt('page', 1);
         $userId = $security->getUser()->getId();
         $canListAll = $security->isGranted(RecipeVoter::LIST_ALL);
-        $recipes = $repository->paginateRecipes($page, $canListAll ? null : $userId);
+        $recipes = $repository->paginateRecipes($page, (int)$canListAll);
         return $this->render(
             view: 'admin/recipe/index.html.twig',
             parameters: [

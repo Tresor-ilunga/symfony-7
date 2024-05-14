@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\DTO\ContactDTO;
+use App\Event\ContactRequestEvent;
 use App\Form\ContactType;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
@@ -22,32 +23,25 @@ class ContactController extends AbstractController
 {
 
     #[Route('/contact', name: 'contact', methods: ['GET', 'POST'])]
-    public function contact(Request $request, MailerInterface $mailer): Response
+    public function contact(Request $request, MailerInterface $mailer, EventDispatcherInterface $dispatcher): Response
     {
         $data = new ContactDTO();
+
         $form = $this->createForm(ContactType::class, $data);
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $mail = (new TemplatedEmail())
-                ->to($data->service)
-                ->from($data->email)
-                ->subject('Demande de contact')
-                ->htmlTemplate('emails/contact.html.twig')
-                ->context(['data' => $data]);
+        if ($form->isSubmitted() && $form->isValid())
+        {
             try {
-                $mailer->send($mail);
+                $dispatcher->dispatch(new ContactRequestEvent($data));
                 $this->addFlash('success', 'Votre message a bien été envoyé');
-                return $this->redirectToRoute('contact');
-            }catch (\Exception $e)
-            {
-                $this->addFlash('danger', 'Impossible d\envoyer votre email');
+            }catch (\Exception $e) {
+                $this->addFlash('danger', 'Impossible d\'envoyer votre email');
             }
         }
-
         return $this->render(
             view: 'contact/contact.html.twig',
             parameters: [
-                'form' => $form,
+                'form' => $form
             ]
         );
     }
