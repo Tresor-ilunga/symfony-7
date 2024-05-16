@@ -40,6 +40,20 @@ class RecipeFixtures extends Fixture implements DependentFixtureInterface
             $this->addReference($c, $category);
         }
 
+        for ($i = 0; $i < 20; $i++)
+        {
+            $title = $faker->foodName();
+            $recipe = (new Recipe())
+                ->setTitle($title)
+                ->setSlug((string)$this->slugger->slug($title))
+                ->setContent($faker->paragraphs(10, true))
+                ->setCategory($this->getReference($faker->randomElement($categories)))
+                ->setUser($this->getReference('USER' . $faker->numberBetween(1, 20)))
+                ->setDuration($faker->numberBetween(2, 60));
+            $manager->persist($recipe);
+        }
+
+        /*
         for ($i = 0; $i <= 10; $i++)
         {
             $title = $faker->foodName();
@@ -52,7 +66,7 @@ class RecipeFixtures extends Fixture implements DependentFixtureInterface
                 ->setDuration($faker->numberBetween(2, 60));
             $manager->persist($recipe);
         }
-
+        */
         $manager->flush();
     }
 

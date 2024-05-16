@@ -37,7 +37,7 @@ class UserFixtures extends Fixture
         $this->addReference(self::ADMIN, $user);
         $manager->persist($user);
 
-        for ($i = 1; $i <= 10; $i++)
+        for ($i = 1; $i < 20; $i++)
         {
             $user = new User();
             $user->setRoles(['ROLE_USER'])
