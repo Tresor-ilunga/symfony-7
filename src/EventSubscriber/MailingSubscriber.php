@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Event\ContactRequestEvent;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
@@ -33,6 +34,9 @@ class MailingSubscriber implements EventSubscriberInterface
         $this->mailer->send($mail);
     }
 
+    /**
+     * @throws TransportExceptionInterface
+     */
     public function onLogin(InteractiveLoginEvent $event): void
     {
         $user = $event->getAuthenticationToken()->getUser();

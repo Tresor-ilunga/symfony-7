@@ -20,9 +20,7 @@
             <tr id="row_recipe_{{ recipe.id }}">
                 <td>{{ recipe.id }}</td>
                 <td>
-                    <turbo-frame id="recipe_{{ recipe.id }}">
-                        <a href="{{ path('admin.recipe.edit', {id: recipe.id}) }}">{{ recipe.title() }}</a>
-                    </turbo-frame>
+                    <a href="{{ path('admin.recipe.edit', {id: recipe.id}) }}">{{ recipe.title() }}</a>
                 </td>
                 <td>{{ recipe.category.name | default('') }}</td>
                 <td>

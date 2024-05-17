@@ -20,7 +20,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class HomeController extends AbstractController
 {
     #[Route('/', name: 'home')]
-    public function index(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $hasher): Response
+    public function index(): Response
     {
         return $this->render(
             view: 'home/index.html.twig'

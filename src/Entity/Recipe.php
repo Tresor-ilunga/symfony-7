@@ -7,6 +7,8 @@ namespace App\Entity;
 use App\Repository\RecipeRepository;
 use App\Validator\BanWord;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -31,7 +33,7 @@ class Recipe
 
     #[ORM\Column(length: 255)]
     #[Assert\Length(min: 5)]
-    #[BanWord()]
+   // #[BanWord()]
     #[Groups(['recipes.index', 'recipes.create'])]
     private string $title = '';
 
@@ -66,10 +68,15 @@ class Recipe
     #[ORM\Column]
     private ?DateTimeImmutable $updatedAt = null;
 
+    #[ORM\OneToMany(targetEntity: Quantity::class, mappedBy: 'recipe', cascade: ['persist'], orphanRemoval: true)]
+    #[Assert\Valid]
+    private Collection $quantities;
+
     public function __construct()
     {
         $this->createdAt = new DateTimeImmutable();
         $this->updatedAt = new DateTimeImmutable();
+        $this->quantities = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -169,6 +176,36 @@ class Recipe
     public function setUpdatedAt(DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Quantity>
+     */
+    public function getQuantities(): Collection
+    {
+        return $this->quantities;
+    }
+
+    public function addQuantity(Quantity $quantity): static
+    {
+        if (!$this->quantities->contains($quantity)) {
+            $this->quantities->add($quantity);
+            $quantity->setRecipe($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQuantity(Quantity $quantity): static
+    {
+        if ($this->quantities->removeElement($quantity)) {
+            // set the owning side to null (unless already changed)
+            if ($quantity->getRecipe() === $this) {
+                $quantity->setRecipe(null);
+            }
+        }
 
         return $this;
     }
