@@ -28,6 +28,12 @@ use Symfony\UX\Turbo\TurboBundle;
 #[Route("/admin/recettes", name: 'admin.recipe.')]
 class RecipeController extends AbstractController
 {
+    /**
+     * @param RecipeRepository $repository
+     * @param Request $request
+     * @param Security $security
+     * @return Response
+     */
     #[Route('/', name: 'index')]
     #[IsGranted(RecipeVoter::LIST)]
     public function index(RecipeRepository $repository, Request $request, Security $security): Response
@@ -44,6 +50,11 @@ class RecipeController extends AbstractController
         );
     }
 
+    /**
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return Response
+     */
     #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
     #[IsGranted(RecipeVoter::CREATE)]
     public function create(Request $request, EntityManagerInterface $em): Response
@@ -66,6 +77,13 @@ class RecipeController extends AbstractController
         );
     }
 
+    /**
+     * @param Recipe $recipe
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @param MessageBusInterface $messageBus
+     * @return Response
+     */
     #[Route('/{id}', name: 'edit', requirements: ['id' => Requirement::DIGITS], methods: ['GET', 'POST'])]
     #[IsGranted(RecipeVoter::EDIT, subject: 'recipe')]
     public function edit(Recipe $recipe, Request $request, EntityManagerInterface $em, MessageBusInterface $messageBus): Response
@@ -88,6 +106,12 @@ class RecipeController extends AbstractController
         );
     }
 
+    /**
+     * @param Request $request
+     * @param Recipe $recipe
+     * @param EntityManagerInterface $em
+     * @return Response
+     */
     #[Route('/{id}', name: 'delete', requirements: ['id' => Requirement::DIGITS], methods: ['GET', 'POST'])]
     #[IsGranted(RecipeVoter::EDIT, subject: 'recipe')]
     public function remove(Request $request,Recipe $recipe, EntityManagerInterface $em): Response

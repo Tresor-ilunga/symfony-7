@@ -21,6 +21,12 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 class ContactController extends AbstractController
 {
+    /**
+     * @param Request $request
+     * @param MailerInterface $mailer
+     * @param EventDispatcherInterface $dispatcher
+     * @return Response
+     */
 
     #[Route('/contact', name: 'contact', methods: ['GET', 'POST'])]
     public function contact(Request $request, MailerInterface $mailer, EventDispatcherInterface $dispatcher): Response

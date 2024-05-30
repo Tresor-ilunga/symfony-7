@@ -23,6 +23,11 @@ use Symfony\Component\Routing\Requirement\Requirement;
  */
 class RecipesController extends AbstractController
 {
+    /**
+     * @param RecipeRepository $repository
+     * @param PaginationDTO|null $paginationDTO
+     * @return JsonResponse
+     */
     #[Route("/api/recipes", methods: ["GET"])]
     public function index(
         RecipeRepository $repository,
@@ -36,6 +41,10 @@ class RecipesController extends AbstractController
         ]);
     }
 
+    /**
+     * @param Recipe $recipe
+     * @return JsonResponse
+     */
     #[Route("/api/recipes/{id}", requirements: ['id' => Requirement::DIGITS])]
     public function show(Recipe $recipe): JsonResponse
     {
@@ -44,6 +53,12 @@ class RecipesController extends AbstractController
         ]);
     }
 
+    /**
+     * @param Request $request
+     * @param Recipe $recipe
+     * @param EntityManagerInterface $em
+     * @return JsonResponse
+     */
     #[Route("/api/recipes", methods: ["POST"])]
     public function create(Request $request,
     #[MapRequestPayload(

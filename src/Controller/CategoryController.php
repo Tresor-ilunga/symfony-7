@@ -24,6 +24,10 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_ADMIN')]
 class CategoryController extends AbstractController
 {
+    /**
+     * @param CategoryRepository $repository
+     * @return Response
+     */
     #[Route(name: 'index')]
     public function index(CategoryRepository $repository): Response
     {
@@ -35,6 +39,11 @@ class CategoryController extends AbstractController
         );
     }
 
+    /**
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return Response
+     */
     #[Route('/create', name: 'create')]
     public function create(Request $request, EntityManagerInterface $em): Response
     {
@@ -57,6 +66,12 @@ class CategoryController extends AbstractController
         );
     }
 
+    /**
+     * @param Category $category
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return Response
+     */
     #[Route('/{id}', name: 'edit', requirements: ['id' => Requirement::DIGITS], methods: ['GET', 'POST'])]
     public function edit(Category $category, Request $request, EntityManagerInterface $em): Response
     {
@@ -79,6 +94,11 @@ class CategoryController extends AbstractController
         );
     }
 
+    /**
+     * @param Category $category
+     * @param EntityManagerInterface $em
+     * @return Response
+     */
     #[Route('/{id}', name: 'delete', requirements: ['id' => Requirement::DIGITS], methods: ['DELETE'])]
     public function remove(Category $category, EntityManagerInterface $em): Response
     {

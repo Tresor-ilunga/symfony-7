@@ -17,6 +17,9 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
  */
 class UserController extends AbstractController
 {
+    /**
+     * @return JsonResponse
+     */
     #[Route('api/me')]
     #[IsGranted("ROLE_USER")]
     public function me(): JsonResponse

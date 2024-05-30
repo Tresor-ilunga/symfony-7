@@ -42,6 +42,10 @@ class CategoryType extends AbstractType
         ;
     }
 
+    /**
+     * @param OptionsResolver $resolver
+     * @return void
+     */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([

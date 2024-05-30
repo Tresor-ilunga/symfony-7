@@ -20,8 +20,16 @@ use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
  */
 class MailingSubscriber implements EventSubscriberInterface
 {
+    /**
+     * @param MailerInterface $mailer
+     */
     public function __construct(private MailerInterface $mailer){}
 
+    /**
+     * @param ContactRequestEvent $event
+     * @return void
+     * @throws TransportExceptionInterface
+     */
     public function onContactRequestEvent(ContactRequestEvent $event): void
     {
         $data = $event->data;
