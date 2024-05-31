@@ -2,23 +2,24 @@ version: '3'
 
 services:
   database:
-    image: mariadb:10.7.3
+    image: mysql:8.0
     container_name: tuto_database
     restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password
     environment:
-      MARIADB_USER: root
-      MARIADB_ROOT_PASSWORD: root
-      MARIADB_DATABASE: main
-      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: 'no'
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: tuto
+      MYSQL_ALLOW_EMPTY_ROOT_PASSWORD: 'no'
     volumes:
-      - database-data:/var/lib/mysql:rw
-      - ./var:/var/www/var
+      - mysql-data:/var/lib/mysql:rw
+      - ./var/mysql:/var/www/var
+      - ./tools/config/mysql.conf:/etc/mysql/conf.d
     labels:
       com.symfony.server.service-prefix: 'DATABASE'
 
   web:
     image: nginx:alpine
-    container_name: main_nginx
+    container_name: tuto_nginx
     restart: unless-stopped
     ports:
       - "8000:80"
@@ -30,7 +31,7 @@ services:
 
   php:
     user: '${USER_ID}:${GROUP_ID}'
-    container_name: main_php
+    container_name: tuto_php
     restart: unless-stopped
     build:
       context: ./tools/docker/php
@@ -41,18 +42,16 @@ services:
 
   ## Development Tools
   maildev:
-    image: maildev/maildev:2.0.2
-    container_name: main_maildev
-    restart: unless-stopped
-    command: bin/maildev --web 80 --smtp 25 --hide-extensions STARTTLS
+    image: mailhog/mailhog
+    container_name: tuto_maildev
     ports:
-      - "1080:80"
+      - "1080:8025"
     labels:
       com.symfony.server.service-prefix: 'MAILER'
 
   adminer:
     image: adminer:4.8.1
-    container_name: main_adminer
+    container_name: tuto_adminer
     restart: unless-stopped
     depends_on:
       - database
@@ -64,7 +63,7 @@ services:
       - "8082:8080"
 
   node:
-    container_name: main_node
+    container_name: tuto_node
     restart: unless-stopped
     user: '${USER_ID}:${GROUP_ID}'
     build:
@@ -75,18 +74,8 @@ services:
       - ./:/home/node/app
     ports:
       - "3000:3000"
-  main:
-    image: 'mysql:latest'
-    environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: main
-    ports:
-      # To allow the host machine to access the ports below, modify the lines below.
-      # For example, to allow the host to connect to port 3306 on the container, you would change
-      # "3306" to "3306:3306". Where the first port is exposed to the host and the second is the container port.
-      # See https://docs.docker.com/compose/compose-file/compose-file-v3/#ports for more information.
-      - '3306'
+
 volumes:
-  database-data:
+  mysql-data:
     driver:
       local
